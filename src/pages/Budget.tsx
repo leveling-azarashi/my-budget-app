@@ -6,6 +6,8 @@ import BudgetOverview from '@/components/budget/BudgetOverview';
 import ExpenseTracker from '@/components/budget/ExpenseTracker';
 import MonthlyAnalytics from '@/components/budget/MonthlyAnalytics';
 import SmartSuggestions from '@/components/budget/SmartSuggestions';
+import CurrencySettings from '@/components/budget/CurrencySettings';
+import CurrencyConverter from '@/components/budget/CurrencyConverter';
 import { BudgetProvider } from '@/components/budget/BudgetContext';
 
 const Budget = () => {
@@ -19,11 +21,13 @@ const Budget = () => {
           </div>
 
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="expenses">Add Expenses</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="suggestions">Suggestions</TabsTrigger>
+              <TabsTrigger value="currency">Currency</TabsTrigger>
+              <TabsTrigger value="converter">Converter</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
@@ -40,6 +44,14 @@ const Budget = () => {
 
             <TabsContent value="suggestions">
               <SmartSuggestions />
+            </TabsContent>
+
+            <TabsContent value="currency">
+              <CurrencySettings />
+            </TabsContent>
+
+            <TabsContent value="converter">
+              <CurrencyConverter />
             </TabsContent>
           </Tabs>
         </div>

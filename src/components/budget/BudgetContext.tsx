@@ -16,12 +16,33 @@ export interface BudgetCategory {
   color: string;
 }
 
+export interface Currency {
+  code: string;
+  name: string;
+  symbol: string;
+}
+
 interface BudgetContextType {
   expenses: Expense[];
   categories: BudgetCategory[];
+  currency: Currency;
   addExpense: (expense: Omit<Expense, 'id'>) => void;
   updateCategoryLimit: (categoryName: string, limit: number) => void;
+  setCurrency: (currency: Currency) => void;
 }
+
+const currencies: Currency[] = [
+  { code: 'USD', name: 'US Dollar', symbol: '$' },
+  { code: 'EUR', name: 'Euro', symbol: '€' },
+  { code: 'GBP', name: 'British Pound', symbol: '£' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
+  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+  { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+  { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' }
+];
 
 const BudgetContext = createContext<BudgetContextType | undefined>(undefined);
 
@@ -35,6 +56,7 @@ export const useBudget = () => {
 
 export const BudgetProvider = ({ children }: { children: React.ReactNode }) => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [currency, setCurrency] = useState<Currency>(currencies[0]); // Default to USD
   const [categories, setCategories] = useState<BudgetCategory[]>([
     { name: 'Groceries', limit: 500, spent: 0, color: 'bg-green-500' },
     { name: 'Transport', limit: 200, spent: 0, color: 'bg-blue-500' },
@@ -65,8 +87,17 @@ export const BudgetProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <BudgetContext.Provider value={{ expenses, categories, addExpense, updateCategoryLimit }}>
+    <BudgetContext.Provider value={{ 
+      expenses, 
+      categories, 
+      currency, 
+      addExpense, 
+      updateCategoryLimit, 
+      setCurrency 
+    }}>
       {children}
     </BudgetContext.Provider>
   );
 };
+
+export { currencies };
