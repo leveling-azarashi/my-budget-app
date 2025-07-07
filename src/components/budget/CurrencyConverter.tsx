@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { currencies } from './BudgetContext';
 
 const CurrencyConverter = () => {
@@ -53,11 +54,10 @@ const CurrencyConverter = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Amount</label>
-            <input
+            <Input
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter amount"
             />
           </div>
@@ -104,11 +104,11 @@ const CurrencyConverter = () => {
         )}
 
         {convertedAmount !== null && exchangeRate !== null && (
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="text-lg font-semibold">
+          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+            <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {amount} {fromCurrency} = {convertedAmount.toFixed(2)} {toCurrency}
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               Exchange rate: 1 {fromCurrency} = {exchangeRate.toFixed(4)} {toCurrency}
             </div>
           </div>
