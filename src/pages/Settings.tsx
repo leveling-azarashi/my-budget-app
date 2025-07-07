@@ -3,13 +3,12 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/components/ThemeProvider';
 import { useLanguage } from '@/components/LanguageProvider';
 import { useBudget, currencies } from '@/components/budget/BudgetContext';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Monitor, Moon, Sun } from 'lucide-react';
+import { ArrowLeft, Monitor, Moon, Sun, Languages, DollarSign, Info } from 'lucide-react';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -34,7 +33,7 @@ const Settings = () => {
   const projectInfo = {
     name: 'Budget Manager',
     version: '1.0.0',
-    buildTime: new Date().toISOString().split('T')[0],
+    buildDate: new Date().toISOString().split('T')[0],
     technologies: [
       'React 18.3.1',
       'TypeScript',
@@ -66,16 +65,31 @@ const Settings = () => {
 
         <Tabs defaultValue="appearance" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="appearance">Appearance</TabsTrigger>
-            <TabsTrigger value="language">Language</TabsTrigger>
-            <TabsTrigger value="currency">Currency</TabsTrigger>
-            <TabsTrigger value="about">About</TabsTrigger>
+            <TabsTrigger value="appearance">
+              <Monitor className="w-4 h-4 mr-2" />
+              Theme
+            </TabsTrigger>
+            <TabsTrigger value="language">
+              <Languages className="w-4 h-4 mr-2" />
+              Language
+            </TabsTrigger>
+            <TabsTrigger value="currency">
+              <DollarSign className="w-4 h-4 mr-2" />
+              Currency
+            </TabsTrigger>
+            <TabsTrigger value="about">
+              <Info className="w-4 h-4 mr-2" />
+              About
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="appearance">
             <Card>
               <CardHeader>
-                <CardTitle>Theme Settings</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Monitor className="w-5 h-5" />
+                  Theme Settings
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
@@ -107,8 +121,10 @@ const Settings = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Current theme: <span className="font-medium capitalize">{theme}</span>
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    <strong>Current theme:</strong> <span className="capitalize">{theme}</span>
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -117,7 +133,10 @@ const Settings = () => {
           <TabsContent value="language">
             <Card>
               <CardHeader>
-                <CardTitle>Language & Region</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Languages className="w-5 h-5" />
+                  Language Settings
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -138,13 +157,9 @@ const Settings = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Current language: {currentLanguage.flag} {currentLanguage.name}
-                </div>
-                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    <strong>Note:</strong> Language changes will affect the interface language. 
-                    Full localization is a work in progress.
+                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                  <p className="text-sm text-green-800 dark:text-green-200">
+                    <strong>Current language:</strong> {currentLanguage.flag} {currentLanguage.name}
                   </p>
                 </div>
               </CardContent>
@@ -154,7 +169,10 @@ const Settings = () => {
           <TabsContent value="currency">
             <Card>
               <CardHeader>
-                <CardTitle>Currency Settings</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Currency Settings
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -172,12 +190,9 @@ const Settings = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Current currency: {currency.symbol} {currency.name} ({currency.code})
-                </div>
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                  <p className="text-sm text-green-800 dark:text-green-200">
-                    This currency will be used throughout the app for displaying amounts and calculations.
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                  <p className="text-sm text-purple-800 dark:text-purple-200">
+                    <strong>Current currency:</strong> {currency.symbol} {currency.name} ({currency.code})
                   </p>
                 </div>
               </CardContent>
@@ -188,21 +203,28 @@ const Settings = () => {
             <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Project Information</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Info className="w-5 h-5" />
+                    Project Information
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="font-medium text-gray-900 dark:text-white">Project Name</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Project Name</h4>
                       <p className="text-gray-600 dark:text-gray-400">{projectInfo.name}</p>
                     </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 dark:text-white">Version</h4>
+                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Version</h4>
                       <p className="text-gray-600 dark:text-gray-400">{projectInfo.version}</p>
                     </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 dark:text-white">Build Date</h4>
-                      <p className="text-gray-600 dark:text-gray-400">{projectInfo.buildTime}</p>
+                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Build Date</h4>
+                      <p className="text-gray-600 dark:text-gray-400">{projectInfo.buildDate}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Platform</h4>
+                      <p className="text-gray-600 dark:text-gray-400">React Web App</p>
                     </div>
                   </div>
                 </CardContent>
@@ -215,29 +237,12 @@ const Settings = () => {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {projectInfo.technologies.map((tech, index) => (
-                      <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                      <div key={index} className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span className="text-sm text-gray-700 dark:text-gray-300">{tech}</span>
+                        <span className="text-sm text-blue-800 dark:text-blue-200 font-medium">{tech}</span>
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Additional Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Built with modern web technologies for optimal performance and user experience.
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Designed and developed with React, TypeScript, and Tailwind CSS.
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Created using Lovable - AI-powered web application development platform.
-                  </p>
                 </CardContent>
               </Card>
             </div>
