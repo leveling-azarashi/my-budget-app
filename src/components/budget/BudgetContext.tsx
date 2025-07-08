@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface Expense {
   id: string;
@@ -72,7 +71,7 @@ export const useBudget = () => {
 
 export const BudgetProvider = ({ children }: { children: React.ReactNode }) => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [currency, setCurrency] = useState<Currency>(currencies[0]);
+  const [currency, setCurrencyState] = useState<Currency>(currencies[0]);
   const [categories, setCategories] = useState<BudgetCategory[]>([
     { id: '1', name: 'Groceries', limit: 500, spent: 0, color: 'bg-green-500' },
     { id: '2', name: 'Transport', limit: 200, spent: 0, color: 'bg-blue-500' },
@@ -86,6 +85,26 @@ export const BudgetProvider = ({ children }: { children: React.ReactNode }) => {
     { id: '2', name: 'Savings Account', balance: 5000, type: 'savings' },
     { id: '3', name: 'Cash Wallet', balance: 150, type: 'cash' },
   ]);
+
+  const setCurrency = (newCurrency: Currency) => {
+    console.log('BudgetContext: Setting currency to:', newCurrency.name);
+    setCurrencyState(newCurrency);
+    localStorage.setItem('preferred-currency', newCurrency.code);
+  };
+
+  useEffect(() => {
+    const savedCurrency = localStorage.getItem('preferred-currency');
+    console.log('BudgetContext: Loading saved currency:', savedCurrency);
+    if (savedCurrency) {
+      const currency = currencies.find(c => c.code === savedCurrency);
+      if (currency) {
+        console.log('BudgetContext: Found saved currency:', currency.name);
+        setCurrencyState(currency);
+      }
+    }
+  }, []);
+
+  console.log('BudgetContext: Current currency is:', currency.name);
 
   const addExpense = (expense: Omit<Expense, 'id'>) => {
     const newExpense = { ...expense, id: Date.now().toString() };

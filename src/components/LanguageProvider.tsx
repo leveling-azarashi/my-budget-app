@@ -40,20 +40,24 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   const [currentLanguage, setCurrentLanguage] = useState<Language>(languages[0]);
 
   const setLanguage = (language: Language) => {
+    console.log('LanguageProvider: Setting language to:', language.name);
     setCurrentLanguage(language);
     localStorage.setItem('preferred-language', language.code);
-    console.log('Language changed to:', language.name);
   };
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('preferred-language');
+    console.log('LanguageProvider: Loading saved language:', savedLanguage);
     if (savedLanguage) {
       const language = languages.find(l => l.code === savedLanguage);
       if (language) {
+        console.log('LanguageProvider: Found saved language:', language.name);
         setCurrentLanguage(language);
       }
     }
   }, []);
+
+  console.log('LanguageProvider: Current language is:', currentLanguage.name);
 
   return (
     <LanguageContext.Provider value={{ 
