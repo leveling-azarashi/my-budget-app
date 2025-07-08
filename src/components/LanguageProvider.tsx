@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 
 interface Language {
   code: string;
@@ -57,14 +57,17 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, []);
 
+  // Use useMemo to ensure the context value only changes when currentLanguage changes
+  const contextValue = useMemo(() => ({
+    currentLanguage,
+    setLanguage,
+    languages
+  }), [currentLanguage]);
+
   console.log('LanguageProvider: Current language is:', currentLanguage.name);
 
   return (
-    <LanguageContext.Provider value={{ 
-      currentLanguage, 
-      setLanguage, 
-      languages
-    }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );
