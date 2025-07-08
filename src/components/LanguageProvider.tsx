@@ -24,9 +24,6 @@ interface LanguageContextType {
   currentLanguage: Language;
   setLanguage: (language: Language) => void;
   languages: Language[];
-  pendingLanguage: Language | null;
-  setPendingLanguage: (language: Language | null) => void;
-  applyLanguageChange: () => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -41,19 +38,11 @@ export const useLanguage = () => {
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentLanguage, setCurrentLanguage] = useState<Language>(languages[0]);
-  const [pendingLanguage, setPendingLanguage] = useState<Language | null>(null);
 
   const setLanguage = (language: Language) => {
     setCurrentLanguage(language);
     localStorage.setItem('preferred-language', language.code);
     console.log('Language changed to:', language.name);
-  };
-
-  const applyLanguageChange = () => {
-    if (pendingLanguage) {
-      setLanguage(pendingLanguage);
-      setPendingLanguage(null);
-    }
   };
 
   useEffect(() => {
@@ -70,10 +59,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     <LanguageContext.Provider value={{ 
       currentLanguage, 
       setLanguage, 
-      languages, 
-      pendingLanguage, 
-      setPendingLanguage, 
-      applyLanguageChange 
+      languages
     }}>
       {children}
     </LanguageContext.Provider>

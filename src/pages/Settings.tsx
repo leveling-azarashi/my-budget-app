@@ -14,18 +14,16 @@ import { useToast } from '@/hooks/use-toast';
 const Settings = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const { currentLanguage, languages, pendingLanguage, setPendingLanguage, applyLanguageChange } = useLanguage();
+  const { currentLanguage, languages, setLanguage } = useLanguage();
   const { currency, setCurrency } = useBudget();
   const { toast } = useToast();
 
   const [pendingTheme, setPendingTheme] = useState<string | null>(null);
+  const [pendingLanguage, setPendingLanguage] = useState<string | null>(null);
   const [pendingCurrency, setPendingCurrency] = useState<string | null>(null);
 
   const handleLanguageChange = (languageCode: string) => {
-    const selectedLanguage = languages.find(l => l.code === languageCode);
-    if (selectedLanguage) {
-      setPendingLanguage(selectedLanguage);
-    }
+    setPendingLanguage(languageCode);
   };
 
   const handleThemeChange = (newTheme: string) => {
@@ -47,13 +45,17 @@ const Settings = () => {
     }
 
     // Apply language changes
-    if (pendingLanguage) {
-      applyLanguageChange();
-      changesMade = true;
+    if (pendingLanguage && pendingLanguage !== currentLanguage.code) {
+      const selectedLanguage = languages.find(l => l.code === pendingLanguage);
+      if (selectedLanguage) {
+        setLanguage(selectedLanguage);
+        setPendingLanguage(null);
+        changesMade = true;
+      }
     }
 
     // Apply currency changes
-    if (pendingCurrency) {
+    if (pendingCurrency && pendingCurrency !== currency.code) {
       const selectedCurrency = currencies.find(c => c.code === pendingCurrency);
       if (selectedCurrency) {
         setCurrency(selectedCurrency);
@@ -100,24 +102,15 @@ const Settings = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => navigate('/budget')}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Budget
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
-              <p className="text-gray-600 dark:text-gray-400">Customize your Budget Manager experience</p>
-            </div>
+        <div className="mb-6 flex items-center gap-4">
+          <Button variant="outline" onClick={() => navigate('/budget')}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Budget
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
+            <p className="text-gray-600 dark:text-gray-400">Customize your Budget Manager experience</p>
           </div>
-          
-          {hasChanges && (
-            <Button onClick={saveChanges} className="ml-4">
-              <Save className="w-4 h-4 mr-2" />
-              Save Changes
-            </Button>
-          )}
         </div>
 
         <Tabs defaultValue="appearance" className="space-y-6">
@@ -204,7 +197,7 @@ const Settings = () => {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Display Language</label>
                   <Select 
-                    value={pendingLanguage?.code || currentLanguage.code} 
+                    value={pendingLanguage || currentLanguage.code} 
                     onValueChange={handleLanguageChange}
                   >
                     <SelectTrigger>
@@ -225,9 +218,9 @@ const Settings = () => {
                 <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                   <p className="text-sm text-green-800 dark:text-green-200">
                     <strong>Current language:</strong> {currentLanguage.flag} {currentLanguage.name}
-                    {pendingLanguage && pendingLanguage.code !== currentLanguage.code && (
+                    {pendingLanguage && pendingLanguage !== currentLanguage.code && (
                       <span className="ml-2 text-orange-600 dark:text-orange-400">
-                        → {pendingLanguage.flag} {pendingLanguage.name} (pending)
+                        → {languages.find(l => l.code === pendingLanguage)?.flag} {languages.find(l => l.code === pendingLanguage)?.name} (pending)
                       </span>
                     )}
                   </p>
@@ -326,6 +319,16 @@ const Settings = () => {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Save Changes Button at Bottom */}
+        {hasChanges && (
+          <div className="mt-8 flex justify-center">
+            <Button onClick={saveChanges} size="lg" className="px-8">
+              <Save className="w-4 h-4 mr-2" />
+              Save Changes
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
